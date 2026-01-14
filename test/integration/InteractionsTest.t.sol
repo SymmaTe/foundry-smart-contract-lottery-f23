@@ -34,17 +34,8 @@ contract InteractionsTest is Test {
     function setUp() external {
         deployer = new DeployRaffle();
         (raffle, helperConfig) = deployer.run();
-        (
-            entranceFee,
-            interval,
-            vrfCoordinator,
-            gasLane,
-            ,
-            callbackGasLimit,
-            enableNativePayment,
-            link,
-
-        ) = helperConfig.activateNetworkConfig();
+        (entranceFee, interval, vrfCoordinator, gasLane,, callbackGasLimit, enableNativePayment, link,) =
+            helperConfig.activateNetworkConfig();
         subscriptionId = raffle.getSubscriptionId();
     }
 
@@ -58,11 +49,8 @@ contract InteractionsTest is Test {
         assertEq(raffle.getEnableNativePayment(), enableNativePayment);
     }
 
-    function testCreateSubscriptionAndFundSubscriptionAndAddConsumer()
-        public view
-        onlyOnAnvilChain
-    {
-         (uint96 balance, , uint64 reqCount, address subOwner, address[] memory consumers) =
+    function testCreateSubscriptionAndFundSubscriptionAndAddConsumer() public view onlyOnAnvilChain {
+        (uint96 balance,, uint64 reqCount, address subOwner, address[] memory consumers) =
             VRFCoordinatorV2_5Mock(payable(vrfCoordinator)).getSubscription(subscriptionId);
 
         console.log("Subscription ID:", subscriptionId);
@@ -71,7 +59,7 @@ contract InteractionsTest is Test {
         console.log("Owner:", subOwner);
         console.log("Consumer address count:", consumers.length);
         console.log("First consumer address:", consumers.length > 0 ? consumers[0] : address(0));
-        assert(balance == FUND_AMOUNT); 
+        assert(balance == FUND_AMOUNT);
         assert(subscriptionId != 0);
         assertEq(consumers[0], address(raffle));
         console.log("CreateSubscription and FundSubscription scripts executed successfully on Anvil chain.");

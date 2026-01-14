@@ -25,38 +25,19 @@ contract DeployRaffle is Script {
 
         if (subscriptionId == 0) {
             CreateSubscription createSubscription = new CreateSubscription();
-            subscriptionId = createSubscription.createSubscription(
-                vrfCoordinator,
-                deployerKey
-            );
+            subscriptionId = createSubscription.createSubscription(vrfCoordinator, deployerKey);
 
             FundSubscription fundSubscription = new FundSubscription();
-            fundSubscription.fundSubscription(
-                vrfCoordinator,
-                subscriptionId,
-                link,
-                deployerKey
-            );
+            fundSubscription.fundSubscription(vrfCoordinator, subscriptionId, link, deployerKey);
         }
 
         vm.startBroadcast();
         Raffle raffle = new Raffle(
-            entranceFee,
-            interval,
-            vrfCoordinator,
-            gasLane,
-            subscriptionId,
-            callbackGasLimit,
-            enableNativePayment
+            entranceFee, interval, vrfCoordinator, gasLane, subscriptionId, callbackGasLimit, enableNativePayment
         );
         vm.stopBroadcast();
         AddConsumer addConsumer = new AddConsumer();
-        addConsumer.addConsumer(
-            vrfCoordinator,
-            subscriptionId,
-            address(raffle),
-            deployerKey
-        );
+        addConsumer.addConsumer(vrfCoordinator, subscriptionId, address(raffle), deployerKey);
         return (raffle, helperConfig);
     }
 }
